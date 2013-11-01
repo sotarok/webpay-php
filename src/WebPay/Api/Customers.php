@@ -3,6 +3,7 @@
 namespace WebPay\Api;
 
 use WebPay\Model\Customer;
+use WebPay\Model\DeletedEntity;
 use WebPay\Model\EntityList;
 
 class Customers extends Accessor
@@ -21,14 +22,19 @@ class Customers extends Accessor
     /**
      * Retrieve an existing customer
      *
-     * @param  string   $id
-     * @return Customer
+     * @param  string $id
+     * @return mixed  Customer or DeletedEntity
      */
     public function retrieve($id)
     {
         $this->assertId($id);
 
-        return new Customer($this->client, $this->client->request('customers.retrieve', array('id' => $id)));
+        $response = $this->client->request('customers.retrieve', array('id' => $id));
+        if (array_key_exists('deleted', $response)) {
+            return new DeletedEntity($this->client, $response);
+        } else {
+            return new Customer($this->client, $response);
+        }
     }
 
     /**
