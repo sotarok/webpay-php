@@ -35,6 +35,7 @@ class CustomersTest extends \WebPay\Tests\WebPayTestCase
         $customer = $this->webpay->customers->retrieve($id);
 
         $this->assertEquals($id, $customer->id);
+        $this->assertEquals(false, $customer->isDeleted());
 
         $this->assertGet('/customers/'.$id);
     }
@@ -50,6 +51,19 @@ class CustomersTest extends \WebPay\Tests\WebPayTestCase
             $this->assertEquals('id must not be empty', $e->getMessage());
             throw $e;
         }
+    }
+
+    public function testRetrieveDeletedEntity()
+    {
+        $this->mock('customers/retrieve_deleted');
+        $id = 'cus_7GafGMbML8R28Io';
+        $customer = $this->webpay->customers->retrieve($id);
+
+        $this->assertEquals($id, $customer->id);
+        $this->assertEquals(true, $customer->deleted);
+        $this->assertEquals(true, $customer->isDeleted());
+
+        $this->assertGet('/customers/'.$id);
     }
 
     public function testAll()

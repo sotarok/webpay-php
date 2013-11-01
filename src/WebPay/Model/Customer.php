@@ -25,6 +25,16 @@ class Customer extends Entity
     }
 
     /**
+     * Classify this response object from DeletedEntity
+     *
+     * @return false
+     */
+    public function isDeleted()
+    {
+        return false;
+    }
+
+    /**
      * Set new email address for save
      *
      * @param string $email The new email address
