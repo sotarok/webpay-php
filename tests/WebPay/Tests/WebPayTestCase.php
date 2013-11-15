@@ -12,7 +12,6 @@ class WebPayTestCase extends \Guzzle\Tests\GuzzleTestCase
     public function setup()
     {
         $this->webpay = new WebPay('test_key', 'http://api.example.com');
-        $this->plugins = array();
     }
 
     protected function mock($file)
