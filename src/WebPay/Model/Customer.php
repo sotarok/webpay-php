@@ -59,9 +59,9 @@ class Customer extends Entity
     /**
      * Set new card parameters for save
      *
-     * @param array $card The new card parameters
+     * @param mixed $card The new card parameters
      */
-    public function setNewCard(array $card)
+    public function setNewCard($card)
     {
         $this->newCard = $card;
         $this->updateCard = true;
