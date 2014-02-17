@@ -91,7 +91,7 @@ abstract class AbstractModel
                 $result[$k] = $v->__toArray();
             else if (is_array($v))
                 $result[$k] = array_map(function ($vv) {
-                        if (is_object($v))
+                        if (is_object($vv))
                             return $vv->__toArray();
                         else
                             return $vv;
