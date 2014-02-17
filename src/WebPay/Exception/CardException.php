@@ -26,7 +26,7 @@ class CardException extends WebPayException
         parent::__construct($errorInfo['message'], $status, $errorInfo);
         $this->type = $errorInfo['type'];
         $this->cardErrorCode = $errorInfo['code'];
-        $this->param = $errorInfo['param'];
+        $this->param = array_key_exists('param', $errorInfo) ? $errorInfo['param'] : null;
     }
 
     /**
