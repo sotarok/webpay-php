@@ -88,6 +88,24 @@ class WebPayTest extends \WebPay\Tests\WebPayTestCase
     }
 
     /**
+     * @expectedException \WebPay\Exception\CardException
+     */
+    public function testRequestRaisesCardErrorWithoutParam()
+    {
+        $this->mock('errors/card_error_no_param');
+        try {
+            $this->webpay->request('account.retrieve', array());
+        } catch (\WebPay\Exception\CardException $e) {
+            $this->assertEquals('This card cannot be used.', $e->getMessage());
+            $this->assertEquals('card_error', $e->getType());
+            $this->assertEquals('card_declined', $e->getCardErrorCode());
+            $this->assertEquals(null, $e->getParam());
+            $this->assertEquals(402, $e->getStatus());
+            throw $e;
+        }
+    }
+
+    /**
      * @expectedException \WebPay\Exception\APIConnectionException
      */
     public function testServerNotFound()
