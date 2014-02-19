@@ -13,6 +13,5 @@ script:
   - php vendor/bin/phpunit -c phpunit.xml.dist
 
 notifications:
-  hipchat:
-    rooms:
-      secure: Di57aLpGum5Fi0tLWGE+rHrtOxJQq92i/Nau3p5WJ8tP7ev1nOT9PM+q/XIygLXrWZvl5pH6VLbxk5yY7hjg+nZgHvZMHmYKbNKzQ9RxwsFDiNr3Rz01ANPT2S+DdcY8vP8RjsoS8BitnPELSPQvlgYCdoeQIUvkBs5HtoBNTvg=
+  webhooks:
+    secure: VoVSi8oyCYkNdncnDdFcCdb7iSvTCI1ANayodk9JOf6nEVr1VQ/KjsbZBUmM14wbeSm/ECc8w6wXrtNWaNf7UH1l8+QOoX7N0Agbqng1/WuSjuWhffklG0Jr6+Yqz14KtxjVeQsfnaTLs47lvLkRp/0H1zjEsuwL6b/3XV83D6E=
