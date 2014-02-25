@@ -144,4 +144,41 @@ class WebPayTest extends \WebPay\Tests\WebPayTestCase
         $prop->setAccessible(true);
         $this->assertEquals('https://api.webpay.jp', $prop->getValue($webpay)->getBaseUrl());
     }
+
+    /**
+     * @expectedException \WebPay\Exception\InvalidRequestException
+     */
+    public function testAcceptLanguage()
+    {
+        $this->mock('errors/not_found_ja');
+        try {
+            $this->webpay->acceptLanguage('ja');
+            $this->webpay->request('account.retrieve', array());
+        } catch (\WebPay\Exception\InvalidRequestException $e) {
+            $requests = $this->lastPlugin->getReceivedRequests();
+            $request = $requests[0];
+            $this->assertEquals(array('ja'), $request->getHeader('accept-language')->toArray());
+
+            $this->assertEquals('該当する顧客がありません: cus_eS6dGfa8BeUlbS', $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * @expectedException \WebPay\Exception\InvalidRequestException
+     */
+    public function testDefaultAcceptLanguage()
+    {
+        $this->mock('errors/not_found');
+        try {
+            $this->webpay->request('account.retrieve', array());
+        } catch (\WebPay\Exception\InvalidRequestException $e) {
+            $requests = $this->lastPlugin->getReceivedRequests();
+            $request = $requests[0];
+            $this->assertEquals(array('en'), $request->getHeader('accept-language')->toArray());
+
+            $this->assertEquals('No such charge: foo', $e->getMessage());
+            throw $e;
+        }
+    }
 }

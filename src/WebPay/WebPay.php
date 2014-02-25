@@ -48,6 +48,7 @@ class WebPay
             $this->client->setBaseUrl($apiBase);
         }
         $this->client->setDefaultOption('auth', array($apiKey, '', 'Basic'));
+        $this->client->setDefaultOption('headers/accept-language', 'en');
         $this->client->getEventDispatcher()->addListener('request.error', array($this, 'onRequestError'));
         $this->client->getEventDispatcher()->addListener('request.exception', array($this, 'onRequestException'));
 
@@ -90,6 +91,20 @@ class WebPay
             $message = 'Guzzle throws exception: ' . $e->getMessage();
             throw new APIConnectionException($message, null, null, $e);
         }
+    }
+
+    /**
+     * Set Accept-Language header value
+     *
+     * @param string $language Accept-Language value
+     *
+     * @return object $this
+     */
+    public function acceptLanguage($language)
+    {
+        $this->client->setDefaultOption('headers/accept-language', $language);
+
+        return $this;
     }
 
     /**
