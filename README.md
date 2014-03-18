@@ -1,4 +1,4 @@
-# webpay-php [![Build Status](https://travis-ci.org/webpay/webpay-php.png)](https://travis-ci.org/webpay/webpay-php)
+# webpay-php [![Build Status](https://travis-ci.org/webpay/webpay-php.png)](https://travis-ci.org/webpay/webpay-php) [![Latest Stable Version](https://poser.pugx.org/webpay/webpay/v/stable.png)](https://packagist.org/packages/webpay/webpay)
 
 WebPay PHP bindings  https://webpay.jp
 
