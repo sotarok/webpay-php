@@ -63,6 +63,18 @@
           "filters": [
             "\\WebPay\\Api\\GuzzleFilter::booleanToStringFilter"
           ]
+        },
+        "expire_days": {
+          "location": "postField",
+          "type": "integer",
+          "required": false,
+          "description": "仮売上の有効日数を課金ごとに設定します。初期値の7日、および設定画面で設定した日数を上書きします。1日から45日の間で設定できます。"
+        },
+        "uuid": {
+          "location": "postField",
+          "type": "string",
+          "required": false,
+          "description": "RFC4122に準拠したUUID(例:\"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\")を設定すると、同じUUIDを持つリクエストが複数回送信されたとき、24時間の間に高々一度だけ処理がおこなわれることを保証します。以前の同じUUIDを持つリクエストで作成済みの課金がある場合は、それを通常の作成時と同じように返却します。"
         }
       }
     },
@@ -176,6 +188,12 @@
           "type": "string",
           "required": false,
           "description": "顧客オブジェクトに添付することができる任意の文字列。この情報はウェブ上のダッシュボードで顧客情報を確認する際に表示されます。"
+        },
+        "uuid": {
+          "location": "postField",
+          "type": "string",
+          "required": false,
+          "description": "RFC4122に準拠したUUID(例:\"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\")を設定すると、同じUUIDを持つリクエストが複数回送信されたとき、24時間の間に高々一度だけ処理がおこなわれることを保証します。以前の同じUUIDを持つリクエストで作成済みの課金がある場合は、それを通常の作成時と同じように返却します。"
         }
       }
     },
@@ -324,6 +342,12 @@
           "type": "array",
           "required": true,
           "description": "このトークンが実際に表すクレジットカードの詳細情報"
+        },
+        "uuid": {
+          "location": "postField",
+          "type": "string",
+          "required": false,
+          "description": "RFC4122に準拠したUUID(例:\"f81d4fae-7dec-11d0-a765-00a0c91e6bf6\")を設定すると、同じUUIDを持つリクエストが複数回送信されたとき、24時間の間に高々一度だけ処理がおこなわれることを保証します。以前の同じUUIDを持つリクエストで作成済みの課金がある場合は、それを通常の作成時と同じように返却します。"
         }
       }
     },
