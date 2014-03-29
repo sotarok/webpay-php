@@ -31,3 +31,9 @@ See [WebPay PHP API Document](https://webpay.jp/docs/api/php) for more details.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## License
+
+[The MIT License (MIT)](http://opensource.org/licenses/mit-license.html)
+
+Copyright (c) 2013- WebPay.
