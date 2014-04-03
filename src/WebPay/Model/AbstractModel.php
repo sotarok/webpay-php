@@ -30,6 +30,19 @@ abstract class AbstractModel
         throw new \Exception($key . ' is not able to override');
     }
 
+    public function __isset($key)
+    {
+        if (array_key_exists($key, $this->data)) {
+            return true;
+        }
+
+        if (array_key_exists($this->decamelize($key), $this->data)) {
+            return true;
+        }
+
+        return false;
+    }
+
     private function decamelize($str)
     {
         $proc = function ($r1) {
