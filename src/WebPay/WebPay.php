@@ -2,66 +2,81 @@
 
 namespace WebPay;
 
-use Guzzle\Common\Event;
-use Guzzle\Service\Client;
-use Guzzle\Service\Description\ServiceDescription;
+use Guzzle\Common\Event as GuzzleEvent;
+use Guzzle\Service\Client as GuzzleClient;
+use Guzzle\Service\Description\ServiceDescription as GuzzleServiceDescription;
 
-use WebPay\Api\Charges;
-use WebPay\Api\Customers;
-use WebPay\Api\Events;
-use WebPay\Api\Tokens;
-use WebPay\Api\Account;
+use WebPay\Charge;
+use WebPay\Customer;
+use WebPay\Token;
+use WebPay\Event;
+use WebPay\Shop;
+use WebPay\Recursion;
+use WebPay\Account;
 
-use WebPay\Exception\WebPayException;
-use WebPay\Exception\APIConnectionException;
+use WebPay\ApiException;
+use WebPay\ApiConnectionException;
+use WebPay\InvalidRequestException;
+use WebPay\InvalidResponseException;
+use WebPay\ErrorResponse\InvalidRequestException as ERInvalidRequestException;
+use WebPay\ErrorResponse\AuthenticationException as ERAuthenticationException;
+use WebPay\ErrorResponse\CardException as ERCardException;
+use WebPay\ErrorResponse\ApiException as ERApiException;
 
 class WebPay
 {
-    /** @var Client */
+    /** @var GuzzleClient */
     private $client;
 
-    /** @var Charges */
-    private $charges;
-
-    /** @var Customers */
-    private $customers;
-
-    /** @var Events */
-    private $events;
-
-    /** @var Tokens */
-    private $tokens;
-
+    /** @var Charge */
+    private $charge;
+    /** @var Customer */
+    private $customer;
+    /** @var Token */
+    private $token;
+    /** @var Event */
+    private $event;
+    /** @var Shop */
+    private $shop;
+    /** @var Recursion */
+    private $recursion;
     /** @var Account */
     private $account;
 
     /**
-     * @param string $apiKey  Your secret API key
-     * @param string $apiBase Default is https://api.webpay.jp
+     * @param array $options API options
      */
-    public function __construct($apiKey, $apiBase = null)
+    public function __construct(array $options)
     {
-        $description = ServiceDescription::factory(__DIR__ . '/Resources/service_descriptions/webpay_v1.json');
-        $this->client = new Client();
-        $this->client->setDescription($description);
-        if (!is_null($apiBase)) {
-            $this->client->setBaseUrl($apiBase);
-        }
-        $this->client->setDefaultOption('auth', array($apiKey, '', 'Basic'));
-        $this->client->setDefaultOption('headers/accept-language', 'en');
+        $apiBase = isset($options['api_base']) ? $options['api_base'] : 'https://api.webpay.jp/v1';
+        $this->client = new GuzzleClient($apiBase);
+
+        $this->client->setDefaultOption('headers/Authorization', 'Bearer ' . $options['api_key']);
+        $this->client->setDefaultOption('headers/Content-Type', "application/json");
+        $this->client->setDefaultOption('headers/Accept', "application/json");
+        $this->client->setDefaultOption('headers/User-Agent', "Apipa-webpay/2.0.0 php");
+        $this->client->setDefaultOption('headers/Accept-Language', "en");
         $this->client->getEventDispatcher()->addListener('request.error', array($this, 'onRequestError'));
         $this->client->getEventDispatcher()->addListener('request.exception', array($this, 'onRequestException'));
 
-        $this->charges = new Charges($this);
-        $this->customers = new Customers($this);
-        $this->events = new Events($this);
-        $this->tokens = new Tokens($this);
+        $this->charge = new Charge($this);
+        $this->customer = new Customer($this);
+        $this->token = new Token($this);
+        $this->event = new Event($this);
+        $this->shop = new Shop($this);
+        $this->recursion = new Recursion($this);
         $this->account = new Account($this);
     }
 
+    public function setAcceptLanguage($value)
+    {
+        $this->client->setDefaultOption('headers/Accept-Language', $value);
+    }
+
+
     public function __get($key)
     {
-        $accessors = array('charges', 'customers', 'events', 'tokens', 'account');
+        $accessors = array('charge', 'customer', 'token', 'event', 'shop', 'recursion', 'account');
         if (in_array($key, $accessors) && property_exists($this, $key)) {
             return $this->{$key};
         } else {
@@ -77,34 +92,30 @@ class WebPay
     /**
      * Dispatch API request
      *
-     * @param string $command A command registered to the service description
+     * @param string $method  HTTP method
+     * @param string $path    target path relative to base_url option value
      * @param array  $params  Request parameters
      *
      * @return mixed Response object
      */
-    public function request($command, array $params)
+    public function request($method, $path, array $params)
     {
-        $command = $this->client->getCommand($command, $params);
-        try {
-            return $command->execute();
-        } catch (\Guzzle\Common\Exception\RuntimeException $e) {
-            $message = 'Guzzle throws exception: ' . $e->getMessage();
-            throw new APIConnectionException($message, null, null, $e);
+        $req = $this->client->createRequest($method, $path, array());
+        if ($method === 'get') {
+            $query = $req->getQuery();
+            foreach ($params as $k => $v) {
+                if ($v == null) continue;
+                $query->add($k, (is_bool($v)) ? ($v ? 'true' : 'false') : $v);
+            }
+        } else {
+            $req->setBody(json_encode($params), 'application/json');
         }
-    }
-
-    /**
-     * Set Accept-Language header value
-     *
-     * @param string $language Accept-Language value
-     *
-     * @return object $this
-     */
-    public function acceptLanguage($language)
-    {
-        $this->client->setDefaultOption('headers/accept-language', $language);
-
-        return $this;
+        try {
+            $res = $req->send();
+            return $res->json();
+        } catch (\Guzzle\Common\Exception\RuntimeException $e) {
+            throw ApiConnectionException::inRequest($e);
+        }
     }
 
     /**
@@ -119,32 +130,53 @@ class WebPay
     }
 
     /**
-     * @param  Event           $event
+     * @param  GuzzleEvent $event
      * @throws WebPayException
      */
-    public function onRequestError(Event $event)
+    public function onRequestError(GuzzleEvent $event)
     {
-        throw WebPayException::exceptionFromResponse($event['response']);
+        $this->throwErrorResponseException($event['response']);
     }
 
     /**
-     * @param  Event                  $event
-     * @throws APIConnectionException
+     * @param  GuzzleEvent $event
+     * @throws WebPayException
      */
-    public function onRequestException(Event $event)
+    public function onRequestException(GuzzleEvent $event)
     {
         $cause = $event['exception'];
-        $message = 'HTTP connection throws exception: ' . (isset($cause) ? $cause->getMessage() : '(exception is not available)');
 
-       if (isset($event['response'])) {
-            $response = $event['response'];
-            $status = $response->getStatusCode();
-            $data = $response->json();
-            $error = isset($data['error']) ? $data['error'] : null;
-
-            throw new APIConnectionException($message, $status, $error, $cause);
+        if (isset($event['response'])) {
+            $this->throwErrorResponseException($event['response']);
         } else {
-            throw new APIConnectionException($message, null, null, $cause);
+            throw ApiConnectionException::inRequest($cause);
         }
+    }
+
+    private function throwErrorResponseException($response)
+    {
+        $data = null;
+        try {
+            $data = $response->json();
+        } catch (\Exception $e) {
+            throw ApiConnectionException::invalidJson($e);
+        }
+        $status = $response->getStatusCode();
+        if ( $status == 400 ) {
+            throw new ERInvalidRequestException($status, $data);
+        }
+        if ( $status == 401 ) {
+            throw new ERAuthenticationException($status, $data);
+        }
+        if ( $status == 402 ) {
+            throw new ERCardException($status, $data);
+        }
+        if ( $status == 404 ) {
+            throw new ERInvalidRequestException($status, $data);
+        }
+        if ( true ) {
+            throw new ERApiException($status, $data);
+        }
+        throw new \Exception("Unknown error is returned");
     }
 }
