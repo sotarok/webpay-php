@@ -20,7 +20,7 @@ class ShopRequestCreate extends AbstractData {
 
     public function __construct(array $params)
     {
-        $this->fields = array('description', 'details', 'live');
+        $this->fields = array('description', 'details');
         $params = $this->normalize($this->fields, $params);
         $this->attributes = $params;
     }

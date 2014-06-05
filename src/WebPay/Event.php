@@ -4,7 +4,7 @@ namespace WebPay;
 
 use WebPay\Data\EventIdRequest;
 use WebPay\Data\EventResponse;
-use WebPay\Data\ListRequestWithEventType;
+use WebPay\Data\EventListRequest;
 use WebPay\Data\EventResponseList;
 
 
@@ -32,12 +32,12 @@ class Event {
     /**
      * List events filtered by params
      *
-     * @param mixed $params a value convertible to ListRequestWithEventType
-     * @return ListRequestWithEventType
+     * @param mixed $params a value convertible to EventListRequest
+     * @return EventListRequest
      */
     public function all($params = array())
     {
-        $req = ListRequestWithEventType::create($params);
+        $req = EventListRequest::create($params);
         $rawResponse = $this->client->request('get', 'events', $req->toArray());
         return new EventResponseList($rawResponse);
     }

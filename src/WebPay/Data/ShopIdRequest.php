@@ -27,7 +27,7 @@ class ShopIdRequest extends AbstractData {
 
     public function __construct(array $params)
     {
-        $this->fields = array('id', 'live');
+        $this->fields = array('id');
         $params = $this->normalize($this->fields, $params);
         $this->attributes = $params;
     }

@@ -6,7 +6,7 @@ use WebPay\Data\RecursionRequestCreate;
 use WebPay\Data\RecursionResponse;
 use WebPay\Data\RecursionIdRequest;
 use WebPay\Data\RecursionRequestResume;
-use WebPay\Data\ListRequestWithCustomerAndSuspended;
+use WebPay\Data\RecursionListRequest;
 use WebPay\Data\RecursionResponseList;
 
 
@@ -74,12 +74,12 @@ class Recursion {
     /**
      * List recursions filtered by params
      *
-     * @param mixed $params a value convertible to ListRequestWithCustomerAndSuspended
-     * @return ListRequestWithCustomerAndSuspended
+     * @param mixed $params a value convertible to RecursionListRequest
+     * @return RecursionListRequest
      */
     public function all($params = array())
     {
-        $req = ListRequestWithCustomerAndSuspended::create($params);
+        $req = RecursionListRequest::create($params);
         $rawResponse = $this->client->request('get', 'recursions', $req->toArray());
         return new RecursionResponseList($rawResponse);
     }

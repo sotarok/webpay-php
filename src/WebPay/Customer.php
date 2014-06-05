@@ -6,7 +6,7 @@ use WebPay\Data\CustomerRequestCreate;
 use WebPay\Data\CustomerResponse;
 use WebPay\Data\CustomerIdRequest;
 use WebPay\Data\CustomerRequestUpdate;
-use WebPay\Data\ListRequest;
+use WebPay\Data\BasicListRequest;
 use WebPay\Data\CustomerResponseList;
 
 
@@ -74,12 +74,12 @@ class Customer {
     /**
      * List customers filtered by params
      *
-     * @param mixed $params a value convertible to ListRequest
-     * @return ListRequest
+     * @param mixed $params a value convertible to BasicListRequest
+     * @return BasicListRequest
      */
     public function all($params = array())
     {
-        $req = ListRequest::create($params);
+        $req = BasicListRequest::create($params);
         $rawResponse = $this->client->request('get', 'customers', $req->toArray());
         return new CustomerResponseList($rawResponse);
     }

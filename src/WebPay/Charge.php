@@ -6,7 +6,7 @@ use WebPay\Data\ChargeRequestCreate;
 use WebPay\Data\ChargeResponse;
 use WebPay\Data\ChargeIdRequest;
 use WebPay\Data\ChargeRequestWithAmount;
-use WebPay\Data\ListRequestWithCustomer;
+use WebPay\Data\ChargeListRequest;
 use WebPay\Data\ChargeResponseList;
 
 
@@ -75,12 +75,12 @@ class Charge {
     /**
      * List charges filtered by params
      *
-     * @param mixed $params a value convertible to ListRequestWithCustomer
-     * @return ListRequestWithCustomer
+     * @param mixed $params a value convertible to ChargeListRequest
+     * @return ChargeListRequest
      */
     public function all($params = array())
     {
-        $req = ListRequestWithCustomer::create($params);
+        $req = ChargeListRequest::create($params);
         $rawResponse = $this->client->request('get', 'charges', $req->toArray());
         return new ChargeResponseList($rawResponse);
     }

@@ -46,15 +46,15 @@ class WebPay
     /**
      * @param array $options API options
      */
-    public function __construct(array $options)
+    public function __construct($authToken, $options = array())
     {
         $apiBase = isset($options['api_base']) ? $options['api_base'] : 'https://api.webpay.jp/v1';
         $this->client = new GuzzleClient($apiBase);
 
-        $this->client->setDefaultOption('headers/Authorization', 'Bearer ' . $options['api_key']);
+        $this->client->setDefaultOption('headers/Authorization', 'Bearer ' . $authToken);
         $this->client->setDefaultOption('headers/Content-Type', "application/json");
         $this->client->setDefaultOption('headers/Accept', "application/json");
-        $this->client->setDefaultOption('headers/User-Agent', "Apipa-webpay/2.0.0 php");
+        $this->client->setDefaultOption('headers/User-Agent', "Apipa-webpay/2.0.1 php");
         $this->client->setDefaultOption('headers/Accept-Language', "en");
         $this->client->getEventDispatcher()->addListener('request.error', array($this, 'onRequestError'));
         $this->client->getEventDispatcher()->addListener('request.exception', array($this, 'onRequestException'));

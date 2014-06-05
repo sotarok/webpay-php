@@ -21,7 +21,7 @@ class ChargeRequestCreate extends AbstractData {
 
     public function __construct(array $params)
     {
-        $this->fields = array('amount', 'currency', 'customer', 'card', 'description', 'capture', 'expire_days', 'uuid');
+        $this->fields = array('amount', 'currency', 'customer', 'shop', 'card', 'description', 'capture', 'expire_days', 'uuid');
         $params = $this->normalize($this->fields, $params);
         $params['card'] = is_array($params['card']) ? new CardRequest($params['card']) : $params['card'];
         $this->attributes = $params;

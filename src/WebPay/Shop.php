@@ -6,7 +6,7 @@ use WebPay\Data\ShopRequestCreate;
 use WebPay\Data\ShopResponse;
 use WebPay\Data\ShopIdRequest;
 use WebPay\Data\ShopRequestUpdate;
-use WebPay\Data\ListRequestWithLive;
+use WebPay\Data\BasicListRequest;
 use WebPay\Data\ShopResponseList;
 
 
@@ -60,12 +60,12 @@ class Shop {
     /**
      * List shops filtered by params
      *
-     * @param mixed $params a value convertible to ListRequestWithLive
-     * @return ListRequestWithLive
+     * @param mixed $params a value convertible to BasicListRequest
+     * @return BasicListRequest
      */
     public function all($params = array())
     {
-        $req = ListRequestWithLive::create($params);
+        $req = BasicListRequest::create($params);
         $rawResponse = $this->client->request('get', 'shops', $req->toArray());
         return new ShopResponseList($rawResponse);
     }
