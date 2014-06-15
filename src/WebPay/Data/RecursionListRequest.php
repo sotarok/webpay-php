@@ -33,4 +33,28 @@ class RecursionListRequest extends AbstractData {
         if ($underscore === 'created') { $value = is_array($value) ? new CreatedRange($value) : $value; }
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'count', 'queryParams');
+
+        $this->copyIfExists($this->attributes, $result, 'offset', 'queryParams');
+
+        $this->copyIfExists($this->attributes, $result, 'created', 'queryParams');
+
+        $this->copyIfExists($this->attributes, $result, 'customer', 'queryParams');
+
+        $this->copyIfExists($this->attributes, $result, 'shop', 'queryParams');
+
+        $this->copyIfExists($this->attributes, $result, 'suspended', 'queryParams');
+        return $result;
+    }
 }

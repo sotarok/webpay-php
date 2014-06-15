@@ -33,4 +33,24 @@ class CustomerRequestCreate extends AbstractData {
         if ($underscore === 'card') { $value = is_array($value) ? new CardRequest($value) : $value; }
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'card', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'description', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'email', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'uuid', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

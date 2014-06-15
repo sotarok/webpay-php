@@ -25,7 +25,7 @@ class Event {
     public function retrieve($params = array())
     {
         $req = EventIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'events' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'events' . '/' . (string)$req->id, $req);
         return new EventResponse($rawResponse);
     }
 
@@ -38,7 +38,7 @@ class Event {
     public function all($params = array())
     {
         $req = EventListRequest::create($params);
-        $rawResponse = $this->client->request('get', 'events', $req->toArray());
+        $rawResponse = $this->client->request('get', 'events', $req);
         return new EventResponseList($rawResponse);
     }
 

@@ -18,4 +18,18 @@ class DeletedResponse extends AbstractData {
     {
         throw new \Exception('This class is immutable');
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'deleted', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

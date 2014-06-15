@@ -30,4 +30,16 @@ class EmptyRequest extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

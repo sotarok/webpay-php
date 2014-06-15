@@ -30,4 +30,24 @@ class CreatedRange extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'gt', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'gte', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'lt', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'lte', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

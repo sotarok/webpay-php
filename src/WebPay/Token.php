@@ -25,7 +25,7 @@ class Token {
     public function create($params = array())
     {
         $req = TokenRequestCreate::create($params);
-        $rawResponse = $this->client->request('post', 'tokens', $req->toArray());
+        $rawResponse = $this->client->request('post', 'tokens', $req);
         return new TokenResponse($rawResponse);
     }
 
@@ -38,7 +38,7 @@ class Token {
     public function retrieve($params = array())
     {
         $req = TokenIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'tokens' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'tokens' . '/' . (string)$req->id, $req);
         return new TokenResponse($rawResponse);
     }
 

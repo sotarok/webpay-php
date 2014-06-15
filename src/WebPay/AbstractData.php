@@ -40,7 +40,7 @@ class AbstractData
             }
             return $result . "  ]";
         } else if (is_array($value)) {
-            $data = [];
+            $data = array();
             foreach ($value as $elem) {
                 array_push($data, $this->stringifyField($elem));
             }
@@ -85,16 +85,16 @@ class AbstractData
         return $result;
     }
 
-    public function toArray()
+    protected function copyIfExists($from ,&$to, $key, $recFun)
     {
-        $result = array();
-        foreach ($this->attributes as $k => $v) {
-            if (gettype($v) === 'object' && method_exists($v, 'toArray')) {
-                $result[$k] = $v->toArray();
-            } else {
-                $result[$k] = $v;
-            }
+        $v = $from[$key];
+        if ($v === null) {
+            return;
         }
-        return $result;
+        if (is_object($v) && method_exists($v, $recFun)) {
+            $to[$key] = $v->$recFun();
+        } else {
+            $to[$key] = $v;
+        }
     }
 }

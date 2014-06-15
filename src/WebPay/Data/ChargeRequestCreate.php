@@ -33,4 +33,34 @@ class ChargeRequestCreate extends AbstractData {
         if ($underscore === 'card') { $value = is_array($value) ? new CardRequest($value) : $value; }
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'amount', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'currency', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'customer', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'shop', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'card', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'description', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'capture', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'expire_days', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'uuid', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

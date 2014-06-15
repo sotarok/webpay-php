@@ -27,7 +27,7 @@ class Shop {
     public function create($params = array())
     {
         $req = ShopRequestCreate::create($params);
-        $rawResponse = $this->client->request('post', 'shops', $req->toArray());
+        $rawResponse = $this->client->request('post', 'shops', $req);
         return new ShopResponse($rawResponse);
     }
 
@@ -40,7 +40,7 @@ class Shop {
     public function retrieve($params = array())
     {
         $req = ShopIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'shops' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'shops' . '/' . (string)$req->id, $req);
         return new ShopResponse($rawResponse);
     }
 
@@ -53,7 +53,7 @@ class Shop {
     public function update($params = array())
     {
         $req = ShopRequestUpdate::create($params);
-        $rawResponse = $this->client->request('post', 'shops' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('post', 'shops' . '/' . (string)$req->id, $req);
         return new ShopResponse($rawResponse);
     }
 
@@ -66,7 +66,7 @@ class Shop {
     public function all($params = array())
     {
         $req = BasicListRequest::create($params);
-        $rawResponse = $this->client->request('get', 'shops', $req->toArray());
+        $rawResponse = $this->client->request('get', 'shops', $req);
         return new ShopResponseList($rawResponse);
     }
 

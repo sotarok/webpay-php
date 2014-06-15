@@ -37,4 +37,18 @@ class RecursionRequestResume extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'retry', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

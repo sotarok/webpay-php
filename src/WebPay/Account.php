@@ -24,7 +24,7 @@ class Account {
     public function retrieve($params = array())
     {
         $req = EmptyRequest::create($params);
-        $rawResponse = $this->client->request('get', 'account', $req->toArray());
+        $rawResponse = $this->client->request('get', 'account', $req);
         return new AccountResponse($rawResponse);
     }
 
@@ -37,7 +37,7 @@ class Account {
     public function deleteData($params = array())
     {
         $req = EmptyRequest::create($params);
-        $rawResponse = $this->client->request('delete', 'account' . '/' . 'data', $req->toArray());
+        $rawResponse = $this->client->request('delete', 'account' . '/' . 'data', $req);
         return new DeletedResponse($rawResponse);
     }
 

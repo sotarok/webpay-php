@@ -30,4 +30,20 @@ class ShopRequestCreate extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'description', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'details', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

@@ -28,7 +28,7 @@ class Charge {
     public function create($params = array())
     {
         $req = ChargeRequestCreate::create($params);
-        $rawResponse = $this->client->request('post', 'charges', $req->toArray());
+        $rawResponse = $this->client->request('post', 'charges', $req);
         return new ChargeResponse($rawResponse);
     }
 
@@ -41,7 +41,7 @@ class Charge {
     public function retrieve($params = array())
     {
         $req = ChargeIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'charges' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'charges' . '/' . (string)$req->id, $req);
         return new ChargeResponse($rawResponse);
     }
 
@@ -55,7 +55,7 @@ class Charge {
     public function refund($params = array())
     {
         $req = ChargeRequestWithAmount::create($params);
-        $rawResponse = $this->client->request('post', 'charges' . '/' . (string)$req->id . '/' . 'refund', $req->toArray());
+        $rawResponse = $this->client->request('post', 'charges' . '/' . (string)$req->id . '/' . 'refund', $req);
         return new ChargeResponse($rawResponse);
     }
 
@@ -68,7 +68,7 @@ class Charge {
     public function capture($params = array())
     {
         $req = ChargeRequestWithAmount::create($params);
-        $rawResponse = $this->client->request('post', 'charges' . '/' . (string)$req->id . '/' . 'capture', $req->toArray());
+        $rawResponse = $this->client->request('post', 'charges' . '/' . (string)$req->id . '/' . 'capture', $req);
         return new ChargeResponse($rawResponse);
     }
 
@@ -81,7 +81,7 @@ class Charge {
     public function all($params = array())
     {
         $req = ChargeListRequest::create($params);
-        $rawResponse = $this->client->request('get', 'charges', $req->toArray());
+        $rawResponse = $this->client->request('get', 'charges', $req);
         return new ChargeResponseList($rawResponse);
     }
 

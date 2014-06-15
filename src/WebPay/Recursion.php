@@ -27,7 +27,7 @@ class Recursion {
     public function create($params = array())
     {
         $req = RecursionRequestCreate::create($params);
-        $rawResponse = $this->client->request('post', 'recursions', $req->toArray());
+        $rawResponse = $this->client->request('post', 'recursions', $req);
         return new RecursionResponse($rawResponse);
     }
 
@@ -41,7 +41,7 @@ class Recursion {
     public function retrieve($params = array())
     {
         $req = RecursionIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'recursions' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'recursions' . '/' . (string)$req->id, $req);
         return new RecursionResponse($rawResponse);
     }
 
@@ -54,7 +54,7 @@ class Recursion {
     public function resume($params = array())
     {
         $req = RecursionRequestResume::create($params);
-        $rawResponse = $this->client->request('post', 'recursions' . '/' . (string)$req->id . '/' . 'resume', $req->toArray());
+        $rawResponse = $this->client->request('post', 'recursions' . '/' . (string)$req->id . '/' . 'resume', $req);
         return new RecursionResponse($rawResponse);
     }
 
@@ -67,7 +67,7 @@ class Recursion {
     public function delete($params = array())
     {
         $req = RecursionIdRequest::create($params);
-        $rawResponse = $this->client->request('delete', 'recursions' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('delete', 'recursions' . '/' . (string)$req->id, $req);
         return new RecursionResponse($rawResponse);
     }
 
@@ -80,7 +80,7 @@ class Recursion {
     public function all($params = array())
     {
         $req = RecursionListRequest::create($params);
-        $rawResponse = $this->client->request('get', 'recursions', $req->toArray());
+        $rawResponse = $this->client->request('get', 'recursions', $req);
         return new RecursionResponseList($rawResponse);
     }
 

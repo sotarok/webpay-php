@@ -27,7 +27,7 @@ class Customer {
     public function create($params = array())
     {
         $req = CustomerRequestCreate::create($params);
-        $rawResponse = $this->client->request('post', 'customers', $req->toArray());
+        $rawResponse = $this->client->request('post', 'customers', $req);
         return new CustomerResponse($rawResponse);
     }
 
@@ -41,7 +41,7 @@ class Customer {
     public function retrieve($params = array())
     {
         $req = CustomerIdRequest::create($params);
-        $rawResponse = $this->client->request('get', 'customers' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('get', 'customers' . '/' . (string)$req->id, $req);
         return new CustomerResponse($rawResponse);
     }
 
@@ -54,7 +54,7 @@ class Customer {
     public function update($params = array())
     {
         $req = CustomerRequestUpdate::create($params);
-        $rawResponse = $this->client->request('post', 'customers' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('post', 'customers' . '/' . (string)$req->id, $req);
         return new CustomerResponse($rawResponse);
     }
 
@@ -67,7 +67,7 @@ class Customer {
     public function delete($params = array())
     {
         $req = CustomerIdRequest::create($params);
-        $rawResponse = $this->client->request('delete', 'customers' . '/' . (string)$req->id, $req->toArray());
+        $rawResponse = $this->client->request('delete', 'customers' . '/' . (string)$req->id, $req);
         return new CustomerResponse($rawResponse);
     }
 
@@ -80,7 +80,7 @@ class Customer {
     public function all($params = array())
     {
         $req = BasicListRequest::create($params);
-        $rawResponse = $this->client->request('get', 'customers', $req->toArray());
+        $rawResponse = $this->client->request('get', 'customers', $req);
         return new CustomerResponseList($rawResponse);
     }
 
@@ -93,7 +93,7 @@ class Customer {
     public function deleteActiveCard($params = array())
     {
         $req = CustomerIdRequest::create($params);
-        $rawResponse = $this->client->request('delete', 'customers' . '/' . (string)$req->id . '/' . 'active_card', $req->toArray());
+        $rawResponse = $this->client->request('delete', 'customers' . '/' . (string)$req->id . '/' . 'active_card', $req);
         return new CustomerResponse($rawResponse);
     }
 

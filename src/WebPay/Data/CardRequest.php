@@ -30,4 +30,26 @@ class CardRequest extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'number', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'exp_month', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'exp_year', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'cvc', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'name', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }

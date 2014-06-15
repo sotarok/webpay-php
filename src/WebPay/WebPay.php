@@ -52,9 +52,13 @@ class WebPay
         $this->client = new GuzzleClient($apiBase);
 
         $this->client->setDefaultOption('headers/Authorization', 'Bearer ' . $authToken);
+
         $this->client->setDefaultOption('headers/Content-Type', "application/json");
+
         $this->client->setDefaultOption('headers/Accept', "application/json");
-        $this->client->setDefaultOption('headers/User-Agent', "Apipa-webpay/2.0.1 php");
+
+        $this->client->setDefaultOption('headers/User-Agent', "Apipa-webpay/2.0.2 php");
+
         $this->client->setDefaultOption('headers/Accept-Language', "en");
         $this->client->getEventDispatcher()->addListener('request.error', array($this, 'onRequestError'));
         $this->client->getEventDispatcher()->addListener('request.exception', array($this, 'onRequestException'));
@@ -72,7 +76,6 @@ class WebPay
     {
         $this->client->setDefaultOption('headers/Accept-Language', $value);
     }
-
 
     public function __get($key)
     {
@@ -92,23 +95,24 @@ class WebPay
     /**
      * Dispatch API request
      *
-     * @param string $method  HTTP method
-     * @param string $path    target path relative to base_url option value
-     * @param array  $params  Request parameters
+     * @param string $method     HTTP method
+     * @param string $path       Target path relative to base_url option value
+     * @param object $paramData  Request data
      *
      * @return mixed Response object
      */
-    public function request($method, $path, array $params)
+    public function request($method, $path, $paramData)
     {
         $req = $this->client->createRequest($method, $path, array());
-        if ($method === 'get') {
-            $query = $req->getQuery();
-            foreach ($params as $k => $v) {
-                if ($v == null) continue;
-                $query->add($k, (is_bool($v)) ? ($v ? 'true' : 'false') : $v);
-            }
-        } else {
-            $req->setBody(json_encode($params), 'application/json');
+        $query = $req->getQuery();
+        foreach ($paramData->queryParams() as $k => $v) {
+            if ($v == null) continue;
+            $query->add($k, (is_bool($v)) ? ($v ? 'true' : 'false') : $v);
+        }
+        if ($method !== 'get' && $method !== 'delete') {
+            $body = $paramData->requestBody();
+            $json = empty($body) ? '{}' : json_encode($body);
+            $req->setBody($json, 'application/json');
         }
         try {
             $res = $req->send();

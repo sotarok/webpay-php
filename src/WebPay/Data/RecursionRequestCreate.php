@@ -30,4 +30,32 @@ class RecursionRequestCreate extends AbstractData {
         $underscore = $this->decamelize($key);
         $this->attributes[$underscore] = $value;
     }
+
+    public function requestBody()
+    {
+        $result = array();
+
+        $this->copyIfExists($this->attributes, $result, 'amount', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'currency', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'customer', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'period', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'description', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'shop', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'first_scheduled', 'requestBody');
+
+        $this->copyIfExists($this->attributes, $result, 'uuid', 'requestBody');
+        return $result;
+    }
+
+    public function queryParams()
+    {
+        $result = array();
+        return $result;
+    }
 }
