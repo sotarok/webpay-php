@@ -42,4 +42,18 @@ class Event {
         return new EventResponseList($rawResponse);
     }
 
+    /**
+     * Create EventResponse object by JSON string
+     *
+     * @param string json string
+     * @return EventResponse
+     */
+    public static function createFromJsonString($json)
+    {
+        $decodedJson = json_decode($json, true);
+        if (!$decodedJson) {
+            throw new \InvalidArgumentException('Argument #1 must be valid JSON string');
+        }
+        return new EventResponse($decodedJson);
+    }
 }
